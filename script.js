@@ -17,7 +17,7 @@ function setupEventListeners() {
 
 async function loadMovies() {
     try {
-        const response = await fetch(`${API_URL}/movies`);ss
+        const response = await fetch(`${API_URL}/movies`);
         const data = await response.json();
         movies = data.movies || [];
         filteredMovies = movies;
@@ -50,15 +50,14 @@ async function addMovie(e) {
     };
     
     try {
-       const response = await fetch(`${API_URL}/movies`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(movie)
+        const response = await fetch(`${API_URL}/movies`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(movie)
         });
 
-        
         const data = await response.json();
         
         if (response.ok) {
@@ -72,7 +71,7 @@ async function addMovie(e) {
         }
     } catch (error) {
         console.error('Error adding movie:', error);
-        showNotification('Error adding movie', 'error');
+        showNotification('Error adding movie (Check server)', 'error');
     }
 }
 
@@ -83,8 +82,8 @@ async function deleteMovie(id) {
     
     try {
         const response = await fetch(`${API_URL}/movies/${id}`, {
-        method: 'DELETE'
-    });
+            method: 'DELETE'
+        });
         
         if (response.ok) {
             movies = movies.filter(m => m.id !== id);
@@ -107,17 +106,18 @@ async function toggleWatchStatus(id) {
     const newStatus = movie.status === 'watched' ? 'unwatched' : 'watched';
     
     try {
-        fetch(`${API_URL}/movies/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
-    });
+        const response = await fetch(`${API_URL}/movies/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+        });
         
         const data = await response.json();
         
         if (response.ok) {
             movie.status = newStatus;
             filterMovies();
+            renderMovies();
             showNotification(`Marked as ${newStatus}!`, 'success');
         } else {
             showNotification(data.error || 'Error updating movie', 'error');
@@ -163,11 +163,8 @@ function renderMovies() {
             <div class="movie-info">
                 <p><strong>Genre:</strong> ${escapeHtml(movie.genre)}</p>
                 ${movie.rating 
-    ? `<p><strong>Rating:</strong> <span class="rating-display">⭐ ${movie.rating}/10</span></p>` 
-    : ''}
-
-    
-
+                    ? `<p><strong>Rating:</strong> <span class="rating-display">⭐ ${movie.rating}/10</span></p>` 
+                    : ''}
                 <p><strong>Status:</strong> <span class="status-badge ${movie.status}">${movie.status}</span></p>
             </div>
             <div class="movie-actions">

@@ -236,6 +236,14 @@ select:focus {
     background: #e74c3c;
 }
 
+footer {
+    text-align: center;
+    color: white;
+    padding: 20px;
+    margin-top: 30px;
+    opacity: 0.8;
+}
+
 @media (max-width: 768px) {
     header h1 {
         font-size: 2rem;

@@ -3,8 +3,9 @@ from flask_cors import CORS
 import json
 import uuid
 from datetime import datetime
+import os
 
-app = Flask(_name_)
+app = Flask(__name__)
 CORS(app)
 
 # In-memory database (you can replace with actual database)
@@ -21,13 +22,14 @@ def save_to_file():
 def load_from_file():
     """Load movies from JSON file"""
     try:
-        with open('movies_data.json', 'r') as f:
-            return json.load(f)
+        if os.path.exists('movies_data.json'):
+            with open('movies_data.json', 'r') as f:
+                return json.load(f)
     except FileNotFoundError:
         return []
     except Exception as e:
         print(f"Error loading from file: {e}")
-        return []
+    return []
 
 # Load existing data on startup
 movies_db = load_from_file()
@@ -192,7 +194,7 @@ def health_check():
         'message': 'Movie Watchlist API is running'
     })
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     print("🎬 Movie Watchlist Manager API")
     print("=" * 50)
     print("Server running on http://localhost:5000")
@@ -204,5 +206,6 @@ if _name_ == '_main_':
     print("  GET    /api/movies/stats  - Get statistics")
     print("  GET    /api/health        - Health check")
     print("=" * 50)
+    print(f"Loaded {len(movies_db)} movies from storage")
     
     app.run(debug=True, port=5000)

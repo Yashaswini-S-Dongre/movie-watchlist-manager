@@ -1,13 +1,15 @@
 {
   "name": "movieproject",
   "version": "1.0.0",
-  "description": "",
-  "main": "script.js",
+  "description": "Movie Watchlist Manager - Track your movies with ratings and watch status",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["movies", "watchlist", "tracker"],
+  "author": "Your Name",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
