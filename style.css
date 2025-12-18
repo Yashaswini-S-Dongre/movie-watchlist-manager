@@ -294,3 +294,8 @@ button:hover {
 .movie-card:hover {
   transform: scale(1.03);
 }
+/* Improve heading typography */
+h1, h2 {
+  letter-spacing: 1px;
+  font-weight: 600;
+}
