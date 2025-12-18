@@ -181,7 +181,7 @@ function renderMovies() {
         </div>
     `).join('');
 }
-
+// Show success or error notification to user
 function showNotification(message, type) {
     const notification = document.getElementById('notification');
     notification.textContent = message;
