@@ -282,3 +282,7 @@ button:hover {
   color: #f1f1f1;
   background-color: #121212;
 }
+/* Movie card shadow enhancement */
+.movie-card {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
