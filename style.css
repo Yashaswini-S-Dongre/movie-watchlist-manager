@@ -286,3 +286,11 @@ button:hover {
 .movie-card {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
+/* Smooth hover transition */
+.movie-card {
+  transition: transform 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: scale(1.03);
+}
