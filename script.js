@@ -1,3 +1,5 @@
+// JavaScript logic for Movie Watchlist Manager
+
 const API_URL = 'http://localhost:5000/api';
 
 let movies = [];
@@ -30,6 +32,7 @@ async function loadMovies() {
 }
 
 async function addMovie(e) {
+    console.log("addMovie function called");
     e.preventDefault();
     
     const title = document.getElementById('movieTitle').value.trim();
@@ -76,6 +79,7 @@ async function addMovie(e) {
 }
 
 async function deleteMovie(id) {
+    console.log("Deleting movie with id: ",id);
     if (!confirm('Are you sure you want to delete this movie?')) {
         return;
     }
@@ -101,8 +105,12 @@ async function deleteMovie(id) {
 
 async function toggleWatchStatus(id) {
     const movie = movies.find(m => m.id === id);
-    if (!movie) return;
-    
+    if (!movie) {
+            showNotification("Movie not found", "error");
+            return;
+        }
+
+
     const newStatus = movie.status === 'watched' ? 'unwatched' : 'watched';
     
     try {
@@ -179,7 +187,7 @@ function renderMovies() {
         </div>
     `).join('');
 }
-
+// Show success or error notification to user
 function showNotification(message, type) {
     const notification = document.getElementById('notification');
     notification.textContent = message;
