@@ -272,3 +272,8 @@ footer {
     background: #2a2a3a;
     color: white;
 }
+/* Button hover improvement */
+button:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
