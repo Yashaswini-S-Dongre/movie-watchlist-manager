@@ -1,3 +1,5 @@
+// JavaScript logic for Movie Watchlist Manager
+
 const API_URL = 'http://localhost:5000/api';
 
 let movies = [];
