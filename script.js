@@ -103,12 +103,12 @@ async function deleteMovie(id) {
 
 async function toggleWatchStatus(id) {
     const movie = movies.find(m => m.id === id);
-    if (!movieName) {
-                        showNotification("Movie name cannot be empty", "error");
-                        return;
-                    }
+    if (!movie) {
+            showNotification("Movie not found", "error");
+            return;
+        }
 
-    
+
     const newStatus = movie.status === 'watched' ? 'unwatched' : 'watched';
     
     try {
