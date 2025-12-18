@@ -299,3 +299,9 @@ h1, h2 {
   letter-spacing: 1px;
   font-weight: 600;
 }
+/* Responsive spacing for small screens */
+@media (max-width: 600px) {
+  .movie-card {
+    margin: 10px;
+  }
+}
