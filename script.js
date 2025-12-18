@@ -79,6 +79,7 @@ async function addMovie(e) {
 }
 
 async function deleteMovie(id) {
+    console.log("Deleting movie with id: ",id);
     if (!confirm('Are you sure you want to delete this movie?')) {
         return;
     }
