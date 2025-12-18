@@ -260,4 +260,15 @@ footer {
     .movie-actions {
         flex-direction: column;
     }
+
+}
+/* Dark Mode Theme */
+.dark-mode {
+    background: #1e1e2f;
+    color: #fafafa;
+}
+
+.dark-mode .movie-card {
+    background: #2a2a3a;
+    color: white;
 }
