@@ -32,6 +32,7 @@ async function loadMovies() {
 }
 
 async function addMovie(e) {
+    console.log("addMovie function called");
     e.preventDefault();
     
     const title = document.getElementById('movieTitle').value.trim();
