@@ -1,11 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const movieSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    title: { type: String, required: true },
-    genre: String,
-    rating: Number,
-    status: { type: String, default: "unwatched" }
+const MovieSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  genre: { type: String, default: 'Not specified' },
+  rating: { type: Number, default: null },
+  status: { type: String, default: 'unwatched' } // React sends 'watched' or 'unwatched'
 }, { timestamps: true });
 
-module.exports = mongoose.model("Movie", movieSchema);
+module.exports = mongoose.model('Movie', MovieSchema);

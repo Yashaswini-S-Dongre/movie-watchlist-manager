@@ -2,14 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const path = require("path");
 
-const authRoutes = require("./routes/auth");
+const authRoutes = require("./routes/auth"); 
 const movieRoutes = require("./routes/movies");
 
 const app = express();
 
-// Middleware
+// Middleware (Crucial for receiving POST requests)
 app.use(cors());
 app.use(express.json());
 
@@ -22,7 +21,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use("/api/auth", authRoutes);
 app.use("/api/movies", movieRoutes);
 
-// Root Route for API check
+// Root Route
 app.get("/", (req, res) => {
     res.send("🎬 Movie Watchlist API is Running");
 });
