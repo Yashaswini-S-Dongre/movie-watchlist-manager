@@ -23,6 +23,7 @@ function App() {
     genre: "", 
     rating: "",
     status: "unwatched",
+    posterUrl: "" // 📸 NEW: State to hold the image
   });
   
   const [suggestions, setSuggestions] = useState([]);
@@ -54,29 +55,37 @@ function App() {
     }
   };
 
-  // 🌍 THE NEW MAGIC: Live Multi-Search from TMDb API (Movies + TV + All Languages)
   const handleTitleChange = async (e) => {
     const value = e.target.value;
-    setFormData({ ...formData, title: value });
+    // Reset the poster URL if they start typing something new
+    setFormData({ ...formData, title: value, posterUrl: "" });
 
     if (value.length > 2) {
       try {
         const res = await axios.get(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${value}`);
         
         if (res.data.results && res.data.results.length > 0) {
-          // Filter out actors/people, keep only movies and TV shows
           const mediaResults = res.data.results.filter(
             item => item.media_type === 'movie' || item.media_type === 'tv'
-          ).slice(0, 6); // Grab top 6 results
+          ).slice(0, 6);
 
+          // 📸 We now map OBJECTS instead of just strings so we can keep the image link
           const formattedSuggestions = mediaResults.map(item => {
-            // TMDb uses 'title' for movies and 'name' for TV shows
             const title = item.media_type === 'movie' ? item.title : item.name;
             const date = item.media_type === 'movie' ? item.release_date : item.first_air_date;
             const year = date ? date.substring(0, 4) : "N/A";
             const type = item.media_type === 'movie' ? "Movie" : "TV Show";
             
-            return `${title} (${year}) - ${type}`;
+            // TMDb gives us a partial path, we add the base URL to make it a real image link
+            const imgUrl = item.poster_path 
+              ? `https://image.tmdb.org/t/p/w500${item.poster_path}` 
+              : "";
+
+            return {
+              displayText: `${title} (${year}) - ${type}`,
+              cleanTitle: title,
+              posterUrl: imgUrl
+            };
           });
 
           setSuggestions(formattedSuggestions);
@@ -94,10 +103,13 @@ function App() {
     }
   };
 
-  const handleSuggestionClick = (suggestionString) => {
-    // Extracts just the title before the "(Year)" part
-    const cleanTitle = suggestionString.split(' (')[0];
-    setFormData({ ...formData, title: cleanTitle });
+  const handleSuggestionClick = (suggestionObj) => {
+    // 📸 We save BOTH the title and the image link to our form state!
+    setFormData({ 
+      ...formData, 
+      title: suggestionObj.cleanTitle,
+      posterUrl: suggestionObj.posterUrl
+    });
     setSuggestions([]);
     setShowSuggestions(false);
   };
@@ -115,8 +127,8 @@ function App() {
       const addedMovie = res.data?.movie || res.data;
 
       if (addedMovie && addedMovie._id) {
-        setMovies((prev) => [...prev, addedMovie]);
-        setFormData({ title: "", genre: "", rating: "", status: "unwatched" });
+        setMovies((prev) => [addedMovie, ...prev]); // Puts newest at the top!
+        setFormData({ title: "", genre: "", rating: "", status: "unwatched", posterUrl: "" });
         showNotification("Added successfully!", "success");
       } else {
         fetchMovies();
@@ -189,13 +201,19 @@ function App() {
             
             {showSuggestions && suggestions.length > 0 && (
               <ul className="suggestions-list" style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "white", border: "1px solid #ccc", zIndex: 10, listStyle: "none", padding: 0, margin: 0, borderRadius: "0 0 8px 8px", boxShadow: "0 4px 6px rgba(0,0,0,0.1)" }}>
-                {suggestions.map((suggestion, index) => (
+                {suggestions.map((suggestionObj, index) => (
                   <li 
                     key={index} 
-                    onClick={() => handleSuggestionClick(suggestion)}
-                    style={{ padding: "10px", cursor: "pointer", borderBottom: "1px solid #eee" }}
+                    onClick={() => handleSuggestionClick(suggestionObj)}
+                    style={{ padding: "10px", cursor: "pointer", borderBottom: "1px solid #eee", display: "flex", alignItems: "center", gap: "10px" }}
                   >
-                    {suggestion}
+                    {/* Tiny preview image in the dropdown! */}
+                    {suggestionObj.posterUrl ? (
+                      <img src={suggestionObj.posterUrl} alt="preview" style={{width: "30px", height: "45px", objectFit: "cover", borderRadius: "3px"}} />
+                    ) : (
+                      <div style={{width: "30px", height: "45px", background: "#eee", borderRadius: "3px"}}></div>
+                    )}
+                    {suggestionObj.displayText}
                   </li>
                 ))}
               </ul>
@@ -264,29 +282,40 @@ function App() {
           <div className="movies-grid">
             {filteredMovies.map((movie) => (
               <div key={movie._id || Math.random()} className={`movie-card ${movie.status}`}>
-                <div className="movie-title">{movie.title}</div>
-                <div className="movie-info">
-                  <p><strong>Genre:</strong> {movie.genre}</p>
-                  <p>
-                    <strong>Status:</strong> 
-                    <span className={`status-badge ${movie.status}`}>
-                      {movie.status}
-                    </span>
-                  </p>
-                </div>
-                <div className="movie-actions">
-                  <button 
-                    className={`btn ${movie.status === 'watched' ? 'btn-danger' : 'btn-success'}`}
-                    onClick={() => handleToggleStatus(movie)}
-                  >
-                    {movie.status === 'watched' ? 'Mark Unwatched' : 'Mark Watched'}
-                  </button>
-                  <button 
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(movie._id || movie.id)} 
-                  >
-                    Delete
-                  </button>
+                
+                {/* 📸 RENDER THE POSTER! */}
+                {movie.posterUrl ? (
+                  <img src={movie.posterUrl} alt={movie.title} className="movie-poster" />
+                ) : (
+                  <div className="no-poster">No Image Available</div>
+                )}
+
+                <div className="movie-content">
+                  <div className="movie-title">{movie.title}</div>
+                  <div className="movie-info">
+                    <p><strong>Genre:</strong> {movie.genre}</p>
+                    <p>
+                      <strong>Status:</strong> 
+                      <span className={`status-badge ${movie.status}`}>
+                        {movie.status}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="movie-actions" style={{ marginTop: 'auto' }}>
+                    <button 
+                      className={`btn ${movie.status === 'watched' ? 'btn-danger' : 'btn-success'}`}
+                      onClick={() => handleToggleStatus(movie)}
+                      style={{ flex: 1 }}
+                    >
+                      {movie.status === 'watched' ? 'Mark Unwatched' : 'Mark Watched'}
+                    </button>
+                    <button 
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(movie._id || movie.id)} 
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

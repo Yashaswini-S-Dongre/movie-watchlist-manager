@@ -1,70 +1,158 @@
-# Getting Started with Create React App
+# 🎬 Universal Movie Watchlist Manager
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A professional **MERN Stack** application that allows users to search millions of Movies and TV Shows across all languages and manage a personal watchlist.
 
-## Available Scripts
+Powered by **TMDb (The Movie Database)**, this app features real-time search suggestions and high-quality movie posters.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 🌍 Global Multi-Search
+Search for movies and TV shows in any language using TMDb API integration.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### ⚡ Dynamic Autocomplete
+Real-time search suggestions with:
+- Release years
+- Mini-previews
+- Instant dropdown results
 
-### `npm test`
+### 🖼️ Poster Gallery
+Automatically fetches and saves high-resolution posters to your personal database.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 📌 Watchlist Management
+- Add movies
+- Delete movies
+- Toggle "Watched / Unwatched" status with a single click
 
-### `npm run build`
+### 📱 Responsive UI
+- Mobile-friendly design
+- CSS gradients
+- Hover effects
+- Clean card layout
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🔔 Notification System
+Real-time success and error alerts for all database actions.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🛠️ Tech Stack
 
-### `npm run eject`
+### Frontend
+- React.js  
+- Axios  
+- CSS3 (Grid & Flexbox)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Backend
+- Node.js  
+- Express.js  
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Database
+- MongoDB (via Mongoose)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### API
+- TMDb (The Movie Database)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## 📂 Project Structure
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+MOVIE-WATCHLIST-MANAGER/
+│
+├── client/                 # React Frontend
+│   ├── public/             # Static files (index.html)
+│   ├── src/
+│   │   ├── App.js          # Main logic & Search Engine
+│   │   ├── App.css         # Custom styling & animations
+│   │   └── index.js        # React Entry point
+│   └── package.json        # Frontend dependencies
+│
+├── server/                 # Node/Express Backend
+│   ├── models/
+│   │   └── Movie.js        # Mongoose Schema (Title, Genre, PosterUrl)
+│   ├── routes/
+│   │   ├── movies.js       # CRUD API Routes
+│   │   └── auth.js         # Authentication placeholder
+│   ├── .env                # Environment variables (Mongo URI & TMDb Key)
+│   ├── server.js           # Main Express server file
+│   └── package.json        # Backend dependencies
+│
+└── README.md
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## ⚙️ Setup & Installation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 1️⃣ Prerequisite: TMDb API Key
 
-### Analyzing the Bundle Size
+Get a free API key from **The Movie Database (TMDb)**.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Open:
 
-### Making a Progressive Web App
+```
+client/src/App.js
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Add your key:
 
-### Advanced Configuration
+```javascript
+const TMDB_API_KEY = "your_key_here";
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+### 2️⃣ Environment Variables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Create a `.env` file inside the `server` folder:
 
-### `npm run build` fails to minify
+```
+MONGO_URI=mongodb://127.0.0.1:27017/movieApp
+PORT=5000
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+### 3️⃣ Installation
+
+Open two terminals.
+
+#### Terminal 1 — Backend
+
+```bash
+cd server
+npm install
+node server.js
+```
+
+#### Terminal 2 — Frontend
+
+```bash
+cd client
+npm install
+npm start
+```
+
+---
+
+## 📖 API Endpoints
+
+| Method | Endpoint           | Description                                      |
+|--------|-------------------|--------------------------------------------------|
+| GET    | /api/movies        | Fetch all movies from your database             |
+| POST   | /api/movies        | Save a new movie (including Poster URL)         |
+| PUT    | /api/movies/:id    | Toggle watched/unwatched status                 |
+| DELETE | /api/movies/:id    | Remove a movie from the database                |
+
+---
+
+## 📝 Usage Tips
+
+- **Real-time Search:** Type at least 3 characters to trigger TMDb global search.
+- **Poster Loading:** Click a movie from the dropdown list to automatically fetch its official poster.
+- **Status Toggle:** Use the "Mark Watched" button to categorize films; card color updates automatically.
+- **Instant Updates:** Watchlist changes reflect immediately with notifications.
+
+---
+```
